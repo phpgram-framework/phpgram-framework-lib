@@ -1,0 +1,31 @@
+{
+	"name":"phpgram/framework-lib",
+	"license": "MIT",
+	"version": "1.0.0",
+	"description": "A part fo the phpgram project build on top of phpgram",
+	"authors": [
+		{
+			"name": "Jörn Heinemann",
+			"email": "j.heinemann1@web.de"
+		}
+	],
+	"keywords": [
+		"gram",
+		"phpgram",
+		"php",
+		"framework"
+	],
+	"require": {
+		"php": "^7.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"Gram\\Project\\Lib\\":"src/"
+		}
+	},
+	"config": {
+        "preferred-install": {
+            "*": "dist"
+        }
+    }
+}

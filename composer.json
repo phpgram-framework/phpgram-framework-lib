@@ -1,7 +1,6 @@
 {
 	"name":"phpgram/framework-lib",
 	"license": "MIT",
-	"version": "1.0.0",
 	"description": "A part fo the phpgram project build on top of phpgram",
 	"authors": [
 		{
@@ -16,7 +15,9 @@
 		"framework"
 	],
 	"require": {
-		"php": "^7.1"
+		"php": "^7.1",
+		"phpgram/phpgram":"*",
+		"phpgram/framework":"*"
 	},
 	"autoload": {
 		"psr-4": {

@@ -1,5 +1,6 @@
 <?php
 namespace Gram\Project\Lib;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class Input
@@ -11,7 +12,68 @@ namespace Gram\Project\Lib;
  */
 class Input
 {
-	private $strict, $value, $name, $check;
+	private $strict, $value=[], $name, $check, $clean;
+
+	/** @var ServerRequestInterface */
+	private $request;
+	private $get, $post;
+
+	public function __construct(ServerRequestInterface $request)
+	{
+		$this->request = $request;
+		$this->get = $request->getQueryParams();
+		$this->post = $request->getParsedBody();
+	}
+
+	public function get($name, $clean=true)
+	{
+		$this->name = $name;
+		$this->clean = $clean;
+		$this->value = [];	//setze Value immer wieder zurück
+
+		$this->getInput();
+
+		return $this->value;
+	}
+
+	public function check($value,$strict=true)
+	{
+		$this->value=$value;
+		$this->strict=$strict;
+
+		$this->checkInput();
+
+		if($this->check==null){
+			return false;
+		}
+		return $this->check;
+	}
+
+	public function clean($value)
+	{
+		$this->value=$value;
+
+		$this->cleanInput();
+
+		return $this->value;
+	}
+
+	public function gNc($name, $strict=true, $clean = true)
+	{
+		$this->name = $name;
+		$this->strict = $strict;
+		$this->clean = $clean;
+		$this->value = []; //setze Value immer wieder zurück
+
+		$this->getInput();
+		$this->checkInput();
+
+		if($this->check!=null && $this->check==true){
+			return $this->value;
+		}
+
+		return false;
+	}
 
 	//Input get
 
@@ -25,13 +87,15 @@ class Input
 		if(is_array($this->name)){
 			foreach ($this->name as $key=>$item) {
 				//speichere den Input an der gleichen Stelle wie der name des Inputs
-				$this->value[$key]=$this->post_get($item);
+				$this->value[$key] = $this->post_get($item);
 			}
 		}else{
 			$this->value=$this->post_get($this->name);
 		}
 
-		$this->cleanInput();
+		if($this->clean){
+			$this->cleanInput();
+		}
 	}
 
 	/**
@@ -40,10 +104,10 @@ class Input
 	 * @return string
 	 */
 	private function post_get($name){
-		if(isset($_POST[$name])){
-			return $_POST[$name];
-		}elseif(isset($_GET[$name])){
-			return $_GET[$name];
+		if(isset($this->post[$name])){
+			return $this->post[$name];
+		}elseif(isset($this->get[$name])){
+			return $this->get[$name];
 		}else{
 			return "";
 		}
@@ -130,83 +194,6 @@ class Input
 			return true;
 		}
 
-		return false;
-	}
-
-	/**
-	 * Gibt einen Input, Array (post oder get) zurück der auch gleich gefiltert wird
-	 * Es ist auch möglich mehre Inputwerte per Array zu bekommen
-	 * bsp.: $input = Input::get('test'); gibt Value von test zurück
-	 * bsp.: $input = Input::get(array('testinput'=>'test')); hier wird die Value von test am Index testinput gespeichert
-	 * @param string $name
-	 * Index des Arrays oder Array mit Indizes
-	 * @return mixed
-	 */
-	public static function get($name){
-		$input=new Input();
-		$input->name=$name;
-
-		$input->getInput();
-
-		return $input->value;
-	}
-
-	/**
-	 * Gibt einen gefilterten Wert oder Array zurück
-	 * @param mixed $value
-	 * @return mixed
-	 */
-	public static function clean($value){
-		$input=new Input();
-		$input->value=$value;;
-
-		$input->cleanInput();
-
-		return $input->value;
-	}
-
-	/**
-	 * Prüft ob das ein Wert oder ein Array vollständig ist
-	 * @param mixed $value
-	 * @param bool $strict
-	 * Wenn gesetzt muss jeder Wert gesetzt sein
-	 * @return bool
-	 */
-	public static function check($value,$strict=true){
-		$input=new Input();
-		$input->value=$value;
-		$input->strict=$strict;
-
-		$input->checkInput();
-
-		if($input->check==null){
-			return false;
-		}
-		return $input->check;
-	}
-
-	/**
-	 * Fasst die kernfunktionen zusammen:
-	 * Holt sich einen Inputwert oder ein Array, filtert dieses und überprüft auf Vollständigkeit
-	 * @param string|array $name
-	 * Index bzw. Array mit Indizes
-	 * @param bool $strict
-	 * Wenn es ein Array ist soll jeder Wert überprüft werden
-	 * @return bool
-	 * false wenn Werte nicht vollständig sind
-	 * Gefiltertes Array bzw Wert der auch auf Vollständigkeit geprüft wurde
-	 */
-	public static function gAC($name,$strict=true){
-		$input=new Input();
-		$input->name=$name;
-		$input->strict=$strict;
-
-		$input->getInput();
-		$input->checkInput();
-
-		if($input->check!=null && $input->check==true){
-			return $input->value;
-		}
 		return false;
 	}
 }

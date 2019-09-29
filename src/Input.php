@@ -1,12 +1,22 @@
 <?php
+/**
+ * phpgram project
+ *
+ * This File is part of the phpgram Mvc Framework Lib
+ *
+ * Web: https://gitlab.com/grammm/php-gram/phpgram-framework-lib/tree/master
+ *
+ * @license https://gitlab.com/grammm/php-gram/phpgram-framework-lib/blob/master/LICENSE
+ *
+ * @author Jörn Heinemann <j.heinemann1@web.de>
+ */
+
 namespace Gram\Project\Lib;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class Input
  * @package Gram\Project\Lib
- * @author Jörn Heinemann
- * @version 1.0
  * Core class um Inputs von Post oder Get zu verwalten
  * bietet auch Funktionen an um Inputs von xss Möglichkeiten zu säubern und auf Vollständigkeit zu prüfen
  */

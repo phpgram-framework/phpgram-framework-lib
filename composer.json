@@ -16,8 +16,9 @@
 	],
 	"require": {
 		"php": "^7.1",
-		"phpgram/phpgram":"*",
-		"phpgram/framework":"*"
+		"phpgram/phpgram":"^1.2.1",
+		"phpgram/framework":"^1.0.5",
+		"pimple/pimple": "3.2.3"
 	},
 	"autoload": {
 		"psr-4": {

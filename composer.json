@@ -16,7 +16,7 @@
 	],
 	"require": {
 		"php": "^7.1",
-		"phpgram/phpgram":"^1.2.1",
+		"phpgram/phpgram":"^1.2.2",
 		"phpgram/framework":"^1.0.5",
 		"pimple/pimple": "3.2.3"
 	},

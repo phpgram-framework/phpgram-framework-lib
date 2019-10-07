@@ -13,7 +13,7 @@
 
 namespace Gram\Project\Lib\View;
 
-use Exception;
+use Gram\Project\Lib\Exceptions\TemplateNotFoundException;
 
 class View implements ViewInterface
 {
@@ -30,6 +30,7 @@ class View implements ViewInterface
 	 * Holt sich das Tpl
 	 *
 	 * Extract die Variables aus dem Array
+	 * @throws TemplateNotFoundException
 	 */
 	public function view($template, array $variables = []):string
 	{
@@ -49,20 +50,16 @@ class View implements ViewInterface
 	 * Holt das Tpl
 	 *
 	 * @param $tpl
+	 * @throws TemplateNotFoundException
 	 */
 	private function render($tpl)
 	{
-		try {
-			$file = $this->tplPath . strtolower($tpl) . '.php';
+		$file = $this->tplPath . strtolower($tpl) . '.php';
 
-			if (file_exists($file)) {
-				$this->tpl = $file;
-			} else {
-				throw new Exception('Template ' . $file . ' not found!');
-			}
-		}
-		catch (Exception $e) {
-			echoExep($e);
+		if (file_exists($file)) {
+			$this->tpl = $file;
+		} else {
+			throw new TemplateNotFoundException('Template ' . $file . ' not found!');
 		}
 	}
 }

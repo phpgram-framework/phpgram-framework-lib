@@ -56,10 +56,6 @@ class StdDB implements DBInterface
 	/**
 	 * @inheritdoc
 	 */
-	/**
-	 * @param $sql
-	 * @return bool|mixed|\PDOStatement
-	 */
 	public function prepare($sql):\PDOStatement
 	{
 		return $this->stmt = $this->pdo->prepare($sql);

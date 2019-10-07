@@ -24,6 +24,8 @@ class StdDB implements DBInterface
 
 	private $exe;
 
+	private static $_instance = null;
+
 	/**
 	 * StdDB constructor.
 	 *
@@ -54,53 +56,70 @@ class StdDB implements DBInterface
 	/**
 	 * @inheritdoc
 	 */
-	public function query($sql, array $args = [])
+	/**
+	 * @param $sql
+	 * @return bool|mixed|\PDOStatement
+	 */
+	public function prepare($sql):\PDOStatement
 	{
-		try{
-			$this->stmt = $this->pdo->prepare($sql);
-
-			$this->exe = $this->stmt->execute($args);
-
-			return $this->exe;
-		}catch (\PDOException $e){
-			echoExep($e);
-			return false;
-		}
+		return $this->stmt = $this->pdo->prepare($sql);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function execute(array $args=[])
+	{
+		return $this->exe = $this->stmt->execute($args);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function query($sql, array $args = [])
+	{
+		$this->stmt = $this->pdo->prepare($sql);
+
+		$this->exe = $this->stmt->execute($args);
+
+		return $this->exe;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getLastId()
 	{
 		return $this->pdo->lastInsertId();
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function fetch($fetchStyle=null)
 	{
 		if(!$this->checkStmt()){
 			return false;
 		}
 
-		try{
-			return $this->stmt->fetch($fetchStyle);
-		}catch (\PDOException $e){
-			echoExep($e);
-			return false;
-		}
+		return $this->stmt->fetch($fetchStyle);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function fetchAll($fetchStyle=null)
 	{
 		if(!$this->checkStmt()){
 			return false;
 		}
 
-		try{
-			return $this->stmt->fetchAll($fetchStyle);
-		}catch (\PDOException $e){
-			echoExep($e);
-			return false;
-		}
+		return $this->stmt->fetchAll($fetchStyle);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function qNf($sql, array $args = [], $fetch = 0, $fetchStyle = null)
 	{
 		$query = $this->query($sql,$args);
@@ -120,22 +139,33 @@ class StdDB implements DBInterface
 		return false;
 	}
 
+	/**
+	 * Prüft ob ein Stmt und ein execute erfolgreich waren
+	 *
+	 * @return bool
+	 */
 	private function checkStmt()
 	{
 		return isset($this->stmt) && isset($this->exe) && $this->stmt!==false && $this->exe!==false;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function count($table = "", $count = "*", $where = "", array $args = [])
 	{
 		$sql="SELECT count($count) FROM $table WHERE $where";
 
-		if($this->query($sql)===false){
+		if($this->query($sql,$args)===false){
 			return false;
 		}
 
 		return $this->stmt->fetchColumn();
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function exist($table = "", $where = "", array $args = [])
 	{
 		$sql="SELECT * FROM $table WHERE $where LIMIT 1";
@@ -159,4 +189,23 @@ class StdDB implements DBInterface
 	//Diese Funktionen dürfen nicht aufgerufen werden von anderen Klassen
 	private function __clone(){}
 	private function __wakeup(){}
+
+	/**
+	 * Gibt PDO Objekt zurück
+	 * Prüft ob bereits eine offene Datenbankverbindung besteht und gibt diese zurück
+	 * Wenn nicht wird eine neue erstellt
+	 * Datenbankquery wird so aufgerufen: StdDB::db()->q();
+	 */
+	public static function db() {
+		if(!isset(self::$_instance)) {
+			self::$_instance = new self(
+				getenv("DBHOST"),
+				getenv("DBNAME"),
+				getenv("DBCHARSET"),
+				getenv("DBUSER"),
+				getenv("DBUSERPW")
+			);
+		}
+		return self::$_instance;
+	}
 }

@@ -23,6 +23,24 @@ namespace Gram\Project\Lib\DB;
 interface DBInterface
 {
 	/**
+	 * Bereitet ein Statement vor
+	 *
+	 * Kann dann von execute mit Parameter ausgeführt werden
+	 *
+	 * @param $sql
+	 * @return mixed
+	 */
+	public function prepare($sql):\PDOStatement;
+
+	/**
+	 * Führt ein prepare Statement aus
+	 *
+	 * @param array $args
+	 * @return mixed
+	 */
+	public function execute(array $args=[]);
+
+	/**
 	 * Führt ein Sql query aus
 	 *
 	 * Gibt true zurück wenn Query erfolgreich

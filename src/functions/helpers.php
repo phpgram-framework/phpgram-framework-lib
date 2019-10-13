@@ -13,6 +13,13 @@
 
 if(!function_exists('url')){
 
+	/**
+	 * Function gibt die Aktuelle Url zurück
+	 *
+	 * @param string $path
+	 * @param bool $full
+	 * @return string
+	 */
 	function url(string $path,$full = true){
 		$url = "";
 

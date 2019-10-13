@@ -83,7 +83,7 @@ class Auth
 				return false;
 			}
 
-			return CookieH::set('lang',$lang,STDCOOKIEEXP);
+			return CookieH::set('lang',$lang);
 		}
 
 		return true;
@@ -307,8 +307,8 @@ class Auth
 			}
 		}
 
-		return (CookieH::set('token',$this->token,STDCOOKIEEXP)
-			&& CookieH::set('sessionid',$this->session,STDCOOKIEEXP));
+		return (CookieH::set('token',$this->token)
+			&& CookieH::set('sessionid',$this->session));
 	}
 
 	/**

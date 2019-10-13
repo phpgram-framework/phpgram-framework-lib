@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class Input
 {
-	private $strict, $value=[], $name, $check, $clean;
+	private $strict, $value, $name, $check, $clean;
 
 	/** @var ServerRequestInterface */
 	private $request;

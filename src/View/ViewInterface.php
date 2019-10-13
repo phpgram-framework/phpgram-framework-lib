@@ -22,7 +22,7 @@ interface ViewInterface
 	 *
 	 * @param $template
 	 * @param array $variables
-	 * @return string
+	 * @return string|mixed
 	 */
-	public function view($template,array $variables = []):string;
+	public function view($template,array $variables = []);
 }

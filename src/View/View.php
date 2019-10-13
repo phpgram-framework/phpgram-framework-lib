@@ -19,6 +19,8 @@ class View implements ViewInterface
 {
 	private $tplPath, $tpl;
 
+	private static $_instance=null;
+
 	public function __construct($tplPath)
 	{
 		$this->tplPath = $tplPath;
@@ -32,7 +34,7 @@ class View implements ViewInterface
 	 * Extract die Variables aus dem Array
 	 * @throws TemplateNotFoundException
 	 */
-	public function view($template, array $variables = []):string
+	public function view($template, array $variables = [])
 	{
 		$this->render($template);
 
@@ -61,5 +63,15 @@ class View implements ViewInterface
 		} else {
 			throw new TemplateNotFoundException('Template ' . $file . ' not found!');
 		}
+	}
+
+	public static function views($template, array $variables = [])
+	{
+		if(self::$_instance===null){
+			self::$_instance = new self(TEMPLATES);
+		}
+
+		/** @noinspection PhpUnhandledExceptionInspection*/
+		return self::$_instance->view($template,$variables);
 	}
 }

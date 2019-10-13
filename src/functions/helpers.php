@@ -27,8 +27,15 @@ if(!function_exists('url')){
 			$url.=getenv('ROOT_URL');
 		}
 
-		$url.=getenv('ROOT_URL_PATH');
+		$url.=getenv('ROOT_URL_PATH')."/";
 
 		return $url.$path;
+	}
+}
+
+if(!function_exists('url_r')){
+
+	function url_r(string $path,$full = true){
+		return url("resources/$path",$full);
 	}
 }

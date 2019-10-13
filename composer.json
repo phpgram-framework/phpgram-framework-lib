@@ -23,7 +23,10 @@
 	"autoload": {
 		"psr-4": {
 			"Gram\\Project\\Lib\\":"src/"
-		}
+		},
+		"files": [
+			"src/functions/helpers.php"
+		]
 	},
 	"config": {
         "preferred-install": {

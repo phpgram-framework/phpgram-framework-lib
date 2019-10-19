@@ -16,13 +16,18 @@ namespace Gram\Project\Lib\View;
 interface ViewInterface
 {
 	/**
-	 * Zeige ein übergebenes Tpl mit übergebenen Variables an
-	 *
-	 * Stelle dazu die Vars dem Tpl zur Verfügung
+	 * Speichert die Template Param
 	 *
 	 * @param $template
 	 * @param array $variables
-	 * @return string|mixed
+	 * @return ViewInterface
 	 */
-	public function view($template,array $variables = []);
+	public function view($template, array $variables = []);
+
+	/**
+	 * Rendert das Tempalte mit den Parametern
+	 *
+	 * @return string
+	 */
+	public function render():string;
 }

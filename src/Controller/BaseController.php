@@ -16,7 +16,7 @@ namespace Gram\Project\Lib\Controller;
 use Gram\Middleware\Classes\ClassInterface;
 use Gram\Middleware\Classes\ClassTrait;
 use Gram\Project\Lib\Input;
-use Gram\Project\Lib\View\Strategy\View;
+use Gram\Project\Lib\View\View;
 
 /**
  * Class BaseController

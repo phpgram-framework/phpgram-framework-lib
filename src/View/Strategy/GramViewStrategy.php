@@ -13,6 +13,7 @@
 
 namespace Gram\Project\Lib\View\Strategy;
 
+use Gram\Project\Lib\View\ViewInterface;
 use Gram\Resolver\ResolverInterface;
 use Gram\Strategy\StrategyInterface;
 
@@ -35,7 +36,7 @@ class GramViewStrategy implements StrategyInterface
 	{
 		$result = $resolver->resolve($param);
 
-		if(!$result instanceof ViewStrategyInterface){
+		if(!$result instanceof ViewInterface){
 			return $result;
 		}
 

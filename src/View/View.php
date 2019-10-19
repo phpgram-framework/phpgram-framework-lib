@@ -17,61 +17,44 @@ use Gram\Project\Lib\Exceptions\TemplateNotFoundException;
 
 class View implements ViewInterface
 {
-	private $tplPath, $tpl;
-
-	private static $_instance=null;
+	protected $template, $path, $args;
 
 	public function __construct($tplPath)
 	{
-		$this->tplPath = $tplPath;
+		$this->path = $tplPath;
 	}
 
 	/**
 	 * @inheritdoc
-	 *
-	 * Holt sich das Tpl
-	 *
-	 * Extract die Variables aus dem Array
-	 * @throws TemplateNotFoundException
 	 */
 	public function view($template, array $variables = [])
 	{
-		$this->render($template);
+		$this->template = $template;
+		$this->args = $variables;
 
-		extract($variables);
-
-		//startet den Output Buffer: bis zu clean() wird alles gesammelt und nicht ausgegeben
-		ob_start();
-		require $this->tpl;
-		$renderedView = ob_get_clean(); //übergibt alles was im Outputbuffer gesammelt wurde und beendet ihn.
-
-		return $renderedView;
+		return $this;
 	}
 
 	/**
-	 * Holt das Tpl
-	 *
-	 * @param $tpl
+	 * @inheritdoc
 	 * @throws TemplateNotFoundException
 	 */
-	private function render($tpl)
+	public function render(): string
 	{
-		$file = $this->tplPath . strtolower($tpl) . '.php';
+		$file = $this->path . strtolower($this->template) . '.php';
 
-		if (file_exists($file)) {
-			$this->tpl = $file;
-		} else {
+		if (!file_exists($file)) {
 			throw new TemplateNotFoundException('Template ' . $file . ' not found!');
 		}
-	}
 
-	public static function views($template, array $variables = [])
-	{
-		if(self::$_instance===null){
-			self::$_instance = new self(TEMPLATES);
-		}
+		extract($this->args);
 
-		/** @noinspection PhpUnhandledExceptionInspection*/
-		return self::$_instance->view($template,$variables);
+		ob_start();
+		require $file;
+		$renderedView = ob_get_clean();
+
+		ob_end_flush();
+
+		return $renderedView;
 	}
 }

@@ -13,7 +13,7 @@
 
 namespace Gram\Project\Lib\Controller;
 
-use Gram\Project\Lib\View\Strategy\ViewStrategyInterface;
+use Gram\Project\Lib\View\ViewInterface;
 
 /**
  * Trait ControllerViewTrait
@@ -23,7 +23,7 @@ use Gram\Project\Lib\View\Strategy\ViewStrategyInterface;
  */
 trait ControllerViewTrait
 {
-	/** @var ViewStrategyInterface */
+	/** @var ViewInterface */
 	protected $view;
 
 	abstract protected function initView();
@@ -31,7 +31,7 @@ trait ControllerViewTrait
 	/**
 	 * @param $tpl
 	 * @param array $vars
-	 * @return ViewStrategyInterface
+	 * @return ViewInterface
 	 */
 	protected function view($tpl,array $vars=[])
 	{

@@ -15,9 +15,15 @@ namespace Gram\Project\Lib\View;
 
 use Gram\Project\Lib\Exceptions\TemplateNotFoundException;
 
-class View implements ViewInterface
+/**
+ * Class View
+ * @package Gram\Project\Lib\View
+ *
+ * Die Standard View Klasse
+ */
+class View implements StdViewInterface
 {
-	protected $template, $path, $args;
+	protected $template=null, $path, $args=[], $extendtpl=null;
 
 	public function __construct($tplPath)
 	{
@@ -37,6 +43,10 @@ class View implements ViewInterface
 
 	/**
 	 * @inheritdoc
+	 *
+	 * Führt sich ggf. selber wieder aus wenn das Template von einem anderen erbt
+	 * Ruft dann das neue Template mit den neu gesammelten Variablen auf
+	 *
 	 * @throws TemplateNotFoundException
 	 */
 	public function render(): string
@@ -51,10 +61,61 @@ class View implements ViewInterface
 
 		ob_start();
 		require $file;
+
+		if($this->extendtpl!==null){
+			$this->template = $this->extendtpl;
+			$this->extendtpl = null;
+			return $this->render();
+		}
+
 		$renderedView = ob_get_clean();
 
-		ob_end_flush();
-
 		return $renderedView;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function start()
+	{
+		ob_start();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function end($var)
+	{
+		$this->args[$var]= ob_get_clean();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function extend($tpl)
+	{
+		$this->extendtpl = $tpl;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function assign($var,$value)
+	{
+		$this->args[$var]=$value;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function assignArray($vars)
+	{
+		if(!is_array($vars)){
+			return;
+		}
+
+		foreach ($vars as $var=>$value) {
+			$this->assign($var,$value);
+		}
 	}
 }

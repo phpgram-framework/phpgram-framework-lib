@@ -119,11 +119,4 @@ interface DBInterface
 	 * @return mixed
 	 */
 	public function exist($table="",$where="",array $args=[]);
-
-	/**
-	 * Gibt die aktuelle DB Instance
-	 *
-	 * @return mixed|\PDO
-	 */
-	public function getDB();
 }

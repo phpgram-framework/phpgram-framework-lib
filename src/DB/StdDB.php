@@ -174,7 +174,6 @@ class StdDB implements DBInterface
 	}
 
 	/**
-	 * @inheritdoc
 	 * @return PDO
 	 */
 	public function getDB()
@@ -190,16 +189,16 @@ class StdDB implements DBInterface
 	 * Gibt PDO Objekt zurück
 	 * Prüft ob bereits eine offene Datenbankverbindung besteht und gibt diese zurück
 	 * Wenn nicht wird eine neue erstellt
-	 * Datenbankquery wird so aufgerufen: StdDB::db()->q();
+	 * Datenbankquery wird so aufgerufen: StdDB::db()->qNf();
 	 */
 	public static function db() {
 		if(!isset(self::$_instance)) {
 			self::$_instance = new self(
-				getenv("DBHOST"),
-				getenv("DBNAME"),
-				getenv("DBCHARSET"),
-				getenv("DBUSER"),
-				getenv("DBUSERPW")
+				getenv("DB_HOST"),
+				getenv("DB_NAME"),
+				getenv("DB_CHARSET"),
+				getenv("DB_USER"),
+				getenv("DB_USER_PW")
 			);
 		}
 		return self::$_instance;

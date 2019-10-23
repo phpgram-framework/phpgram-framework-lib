@@ -1,6 +1,5 @@
 <?php
 namespace Gram\Project\Lib;
-use Gram\Project\App\ProjectApp as App;
 
 /**
  * Class CookieH
@@ -18,13 +17,13 @@ class CookieH
 	 * Name des Cookies
 	 * @param mixed $value
 	 * Wert des Cookies
-	 * @param int $expiry
+	 * @param $expiry
 	 * wann der Cookie ablaufen soll
 	 * @return bool
 	 */
 	public static function set($key, $value,$expiry=false){
 		if(!$expiry){
-			$expiry=App::$options['cookie']['cookieExp'];
+			$expiry=strtotime('+30 days');
 		}
 
 		return setcookie($key,$value,$expiry,"/",null,null,true);

@@ -17,6 +17,8 @@ use Gram\Project\Lib\SessionH;
 
 class AuthToken
 {
+	private static $gen_tocken = null;
+
 	public static function generateToken($session=true)
 	{
 		try {
@@ -36,5 +38,14 @@ class AuthToken
 
 	public static function validToken($token){
 		return (SessionH::get('token') == $token);
+	}
+
+	public static function csrf()
+	{
+		if(self::$gen_tocken === null){
+			self::$gen_tocken = self::generateToken();
+		}
+
+		return '<input type="hidden" name="csrf_token" value="'.self::$gen_tocken.'">';
 	}
 }

@@ -14,8 +14,11 @@
 namespace Gram\Project\Lib\Authenticate;
 
 
-abstract class AuthenticateAbstract implements AuthenticateInterface
+abstract class AuthenticateAbstract
 {
+	const PW_ALOG=PASSWORD_DEFAULT;
+	const PW_COST = ['cost'=>12];
+
 	/** @var UserInterface */
 	protected $user;
 

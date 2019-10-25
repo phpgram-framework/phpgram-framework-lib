@@ -118,4 +118,19 @@ class View implements StdViewInterface
 			$this->assign($var,$value);
 		}
 	}
+
+	/**
+	 * @inheritdoc
+	 * @throws TemplateNotFoundException
+	 */
+	public function include_file($file)
+	{
+		$file = $this->path.strtolower($file) . '.php';
+
+		if (!file_exists($file)) {
+			throw new TemplateNotFoundException('Template ' . $file . ' not found!');
+		}
+
+		include $file;
+	}
 }

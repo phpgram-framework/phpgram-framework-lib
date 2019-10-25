@@ -64,7 +64,7 @@ interface StdViewInterface extends ViewInterface
 	 * @param $value
 	 * Der Wert der Variable
 	 *
-	 * @return mixed
+	 * @return void
 	 */
 	public function assign($var,$value);
 
@@ -75,7 +75,15 @@ interface StdViewInterface extends ViewInterface
 	 * ['var_name'=>value]
 	 *
 	 * @param $vars
-	 * @return mixed
+	 * @return void
 	 */
 	public function assignArray($vars);
+
+	/**
+	 * Fügt eine neue Datei hinzu relativ zum tpl Pfad
+	 *
+	 * @param $file
+	 * @return void
+	 */
+	public function include_file($file);
 }

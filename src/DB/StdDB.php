@@ -24,8 +24,6 @@ class StdDB implements DBInterface
 
 	private $exe;
 
-	private static $_instance = null;
-
 	/**
 	 * StdDB constructor.
 	 *
@@ -184,23 +182,4 @@ class StdDB implements DBInterface
 	//Diese Funktionen dürfen nicht aufgerufen werden von anderen Klassen
 	private function __clone(){}
 	private function __wakeup(){}
-
-	/**
-	 * Gibt PDO Objekt zurück
-	 * Prüft ob bereits eine offene Datenbankverbindung besteht und gibt diese zurück
-	 * Wenn nicht wird eine neue erstellt
-	 * Datenbankquery wird so aufgerufen: StdDB::db()->qNf();
-	 */
-	public static function db() {
-		if(!isset(self::$_instance)) {
-			self::$_instance = new self(
-				getenv("DB_HOST"),
-				getenv("DB_NAME"),
-				getenv("DB_CHARSET"),
-				getenv("DB_USER"),
-				getenv("DB_USER_PW")
-			);
-		}
-		return self::$_instance;
-	}
 }

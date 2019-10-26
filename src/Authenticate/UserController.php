@@ -2,7 +2,7 @@
 /**
  * phpgram project
  *
- * This File is part of the phpgram Mvc Framework Lib
+ * This File is part of the phpgram Framework Lib
  *
  * Web: https://gitlab.com/grammm/php-gram/phpgram-framework-lib/tree/master
  *
@@ -49,7 +49,7 @@ class UserController extends AuthenticateAbstract
 			return false;
 		}
 
-		return $this->user->setPw($this->pwHash($pwnew));
+		return $this->user->setPw($name,$this->pwHash($pwnew));
 	}
 
 	public function resetPW($name,$pwnew)
@@ -58,6 +58,6 @@ class UserController extends AuthenticateAbstract
 			return false;
 		}
 
-		return $this->user->setPw($this->pwHash($pwnew));
+		return $this->user->setPw($name,$this->pwHash($pwnew));
 	}
 }

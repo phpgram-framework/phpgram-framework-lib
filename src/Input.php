@@ -2,7 +2,7 @@
 /**
  * phpgram project
  *
- * This File is part of the phpgram Mvc Framework Lib
+ * This File is part of the phpgram Framework Lib
  *
  * Web: https://gitlab.com/grammm/php-gram/phpgram-framework-lib/tree/master
  *
@@ -17,129 +17,146 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Class Input
  * @package Gram\Project\Lib
- * Core class um Inputs von Post oder Get zu verwalten
- * bietet auch Funktionen an um Inputs von xss Möglichkeiten zu säubern und auf Vollständigkeit zu prüfen
+ *
+ * Erfasst, filtert und prüft Inputs mit get, post oder stream (z. B. mit delete oder put)
+ *
+ * Filtert nach xss
  */
 class Input
 {
-	private $strict, $value, $name, $check, $clean;
-
-	/** @var ServerRequestInterface */
-	private $request;
-	private $get, $post;
+	private $json_input, $get, $post, $strict, $check;
 
 	public function __construct(ServerRequestInterface $request)
 	{
-		$this->request = $request;
 		$this->get = $request->getQueryParams();
 		$this->post = $request->getParsedBody();
+
+		$stream = $request->getBody()->__toString();
+
+		$this->json_input = ($stream==='')?[]:json_decode($stream,true);
 	}
 
+	/**
+	 * Gibt zu einem geg. Namen das Input value oder '' zurück
+	 *
+	 * Name kann auch ein assoc Array sein, dann wird der Value an die Stelle des Namens
+	 * im Array gespeichert
+	 *
+	 * z. B.:
+	 * ['input1'=>"name"] = ['input1'=>"value"]
+	 *
+	 * @param $name
+	 * @param bool $clean
+	 * @return array|mixed|string
+	 */
 	public function get($name, $clean=true)
 	{
-		$this->name = $name;
-		$this->clean = $clean;
-		$this->value = [];	//setze Value immer wieder zurück
+		$value=[];
 
-		$this->getInput();
-
-		return $this->value;
-	}
-
-	public function check($value,$strict=true)
-	{
-		$this->value=$value;
-		$this->strict=$strict;
-
-		$this->checkInput();
-
-		if($this->check==null){
-			return false;
+		if(is_array($name)){
+			foreach ($name as $key=>$item) {
+				//speichere den Input an der gleichen Stelle wie der name des Inputs
+				$value[$key] = $this->get_value($item);
+			}
+		}else{
+			$value=$this->get_value($name);
 		}
-		return $this->check;
+
+		if($clean){
+			$value=$this->clean($value);
+		}
+
+		return $value;
 	}
 
+	/**
+	 * Filtert einen Input mit @see htmlspecialchars
+	 *
+	 * @param $value
+	 * @return array|string
+	 */
 	public function clean($value)
 	{
-		$this->value=$value;
+		if(is_array($value)){
+			array_walk_recursive($value,[$this, 'cleanInputArray']);
+			return $value;
+		}
 
-		$this->cleanInput();
-
-		return $this->value;
+		return $this->cleanInputSingle($value);
 	}
 
+	/**
+	 * Prüft einen Wert oder ein Array ob es nicht '' (leer) ist
+	 *
+	 * @param $value
+	 * @param bool $strict
+	 * @return bool
+	 */
+	public function check($value,$strict=true)
+	{
+		$this->strict = $strict;
+
+		if(is_array($value)){
+			array_walk_recursive($value,[$this, 'checkArray']);
+			return $this->check;
+		}
+
+		return $this->checkSingle($value);
+	}
+
+	/**
+	 * Benutzt @see get()
+	 * und @see check()
+	 *
+	 * in Kombination
+	 *
+	 * @param $name
+	 * @param bool $strict
+	 * @param bool $clean
+	 * @return array|bool|mixed|string
+	 */
 	public function gNc($name, $strict=true, $clean = true)
 	{
-		$this->name = $name;
-		$this->strict = $strict;
-		$this->clean = $clean;
-		$this->value = []; //setze Value immer wieder zurück
+		$value = $this->get($name,$clean);
 
-		$this->getInput();
-		$this->checkInput();
+		$check = $this->check($value,$strict);
 
-		if($this->check!=null && $this->check==true){
-			return $this->value;
+		$this->check = null;
+
+		if($check!=null && $check==true){
+			return $value;
 		}
 
 		return false;
 	}
 
-	//Input get
-
 	/**
-	 * holt sich einen Inputwert (get oder post) und filtert alle xss Möglichkeiten raus
-	 * funktioniert auch bei Arrays
-	 * funktioniert auch mit meheren Inputindizes auf einmal
-	 */
-	private function getInput(){
-		//wenn mehere Inputs in einem Array zusammengefasst werden sollen
-		if(is_array($this->name)){
-			foreach ($this->name as $key=>$item) {
-				//speichere den Input an der gleichen Stelle wie der name des Inputs
-				$this->value[$key] = $this->post_get($item);
-			}
-		}else{
-			$this->value=$this->post_get($this->name);
-		}
-
-		if($this->clean){
-			$this->cleanInput();
-		}
-	}
-
-	/**
-	 * Gibt einen Wert zurück der mit get oder post übergeben wurde
+	 * Holt einen Wert aus:
+	 * - Post
+	 * - Get
+	 * - Inputstream (json)
+	 *
 	 * @param $name
-	 * @return string
+	 * @return mixed|string
 	 */
-	private function post_get($name){
+	private function get_value($name){
 		if(isset($this->post[$name])){
 			return $this->post[$name];
 		}elseif(isset($this->get[$name])){
 			return $this->get[$name];
+		}elseif(isset($this->json_input[$name])){
+			return $this->json_input[$name];
 		}else{
 			return "";
 		}
 	}
 
-	//Input säubern
-
 	/**
-	 * Filtert alle Xss Möglichkeiten raus
-	 * funktioniert auch über Arrays
-	 */
-	private function cleanInput(){
-		if(is_array($this->value)){
-			array_walk_recursive($this->value,array($this, 'cleanInputArray'));
-			return;
-		}
-
-		$this->value = $this->cleanInputSingle($this->value);
-	}
-
-	/**
-	 * Bekommt Wert von einem Array übergeben und wendet die Filterfunktion an
+	 * Die Function die beim Durchlauf des Arrays aufgerufen wird
+	 * für jedes Element.
+	 *
+	 * Speichert den gefilterten Wert anstelle des Values ab
+	 *
 	 * @param $a
 	 */
 	private function cleanInputArray(&$a){
@@ -147,7 +164,8 @@ class Input
 	}
 
 	/**
-	 * Wendet die Filterfunktion auf einen Wert an
+	 * Filtert einen Wert
+	 *
 	 * @param $a
 	 * @return string
 	 */
@@ -155,24 +173,9 @@ class Input
 		return htmlspecialchars($a,ENT_QUOTES);
 	}
 
-	//Input auf vollständigkeit prüfen
-
 	/**
-	 * Prüft ob Inputwerte vollständig ausgefüllt sind
-	 */
-	private function checkInput(){
-		if(is_array($this->value)){
-			array_walk_recursive($this->value,array($this, 'checkArray'));
-			return;
-		}
-
-		$this->check = $this->checkSingle($this->value);
-	}
-
-	/**
-	 * Wendet die Prüffunktion für jeden Wert des Arrays an
-	 * Wenn strict = false: gebe true zurück sobald ein Wert gesetzt wurde
-	 * sonst prüfe jeden Wert ob dieser gesetzt ist
+	 * Prüft ein Array ob Werte gesetzt sind
+	 *
 	 * @param $a
 	 */
 	private function checkArray(&$a){
@@ -195,7 +198,8 @@ class Input
 	}
 
 	/**
-	 * Überprüft einen einzelnen Wert ob dieser gesetzt wurde
+	 * Prüft einen einzelnen Wert ob dieser gesetzt ist
+	 *
 	 * @param $a
 	 * @return bool
 	 */

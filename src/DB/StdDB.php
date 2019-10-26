@@ -2,7 +2,7 @@
 /**
  * phpgram project
  *
- * This File is part of the phpgram Mvc Framework Lib
+ * This File is part of the phpgram Framework Lib
  *
  * Web: https://gitlab.com/grammm/php-gram/phpgram-framework-lib/tree/master
  *
@@ -164,7 +164,7 @@ class StdDB implements DBInterface
 	{
 		$sql="SELECT * FROM $table WHERE $where LIMIT 1";
 
-		if($this->query($sql)===false){
+		if($this->query($sql,$args)===false){
 			return false;
 		}
 

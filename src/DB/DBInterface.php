@@ -2,7 +2,7 @@
 /**
  * phpgram project
  *
- * This File is part of the phpgram Mvc Framework Lib
+ * This File is part of the phpgram Framework Lib
  *
  * Web: https://gitlab.com/grammm/php-gram/phpgram-framework-lib/tree/master
  *
@@ -28,7 +28,7 @@ interface DBInterface
 	 * Kann dann von execute mit Parameter ausgeführt werden
 	 *
 	 * @param $sql
-	 * @return mixed
+	 * @return \PDOStatement
 	 */
 	public function prepare($sql):\PDOStatement;
 

@@ -2,7 +2,7 @@
 /**
  * phpgram project
  *
- * This File is part of the phpgram Mvc Framework Lib
+ * This File is part of the phpgram Framework Lib
  *
  * Web: https://gitlab.com/grammm/php-gram/phpgram-framework-lib/tree/master
  *
@@ -53,18 +53,5 @@ if(!function_exists('debug_console')){
 			$output = "<script>console.log('Debugausgabe: ".$data."');</script>";
 
 		echo $output;
-	}
-}
-
-if(!function_exists('loadJSON')) {
-	/**
-	 * Funktion läd einen Json String und wandelt diesen in ein Array um
-	 * @param $path
-	 * @return mixed
-	 */
-	function loadJSON($path){
-		$file = file_get_contents($path);
-
-		return json_decode($file, true);
 	}
 }

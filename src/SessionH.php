@@ -15,7 +15,6 @@ class SessionH
 
 	/**
 	 * Startet eine Session wenn diese noch nicht gestartet wurde
-	 * Prüft gleichzeitig auf hijacking
 	 */
     private static function start(){
         if(!self::$_sessionStarted){
@@ -23,13 +22,6 @@ class SessionH
             session_start();
             self::$_sessionStarted=true;
         }
-
-        //Um Session Hijacking zu verhindern. Bei jeder Session aktion wird geprüft ob die IP noch die selbe ist wie zu beginn der Sesiion
-        if(!isset($_SESSION['last_ip']) && self::$_sessionStarted)
-			$_SESSION['last_ip'] = $_SERVER['REMOTE_ADDR'];
-
-		if($_SESSION['last_ip']!=$_SERVER['REMOTE_ADDR'])
-        	self::destroy();
     }
 
 	/**

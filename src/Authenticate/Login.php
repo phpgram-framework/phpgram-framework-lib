@@ -15,8 +15,26 @@ namespace Gram\Project\Lib\Authenticate;
 
 use Gram\Project\Lib\SessionH;
 
+/**
+ * Class Login
+ * @package Gram\Project\Lib\Authenticate
+ *
+ * methods um Login Prozess durch zuführen, aus zulogen
+ * oder zu prüfen ob eingelogt
+ */
 class Login extends AuthenticateAbstract
 {
+	/**
+	 * Führt den Login Prozess durch
+	 *
+	 * Prüft ob es den user gibt
+	 *
+	 * Setzt Weidererkennungs Merkmale in die Session
+	 *
+	 * @param $username
+	 * @param $password
+	 * @return bool
+	 */
 	public function login($username,$password)
 	{
 		//Prüfe ob User existiert und hole gleichzeitig die unterinfos
@@ -30,6 +48,11 @@ class Login extends AuthenticateAbstract
 		return true;
 	}
 
+	/**
+	 * Zerstört die Session des Nutzers
+	 *
+	 * @return bool
+	 */
 	public function logout()
 	{
 		SessionH::destroy();
@@ -37,11 +60,19 @@ class Login extends AuthenticateAbstract
 		return (!SessionH::existK('user','username'));
 	}
 
+	/**
+	 * Püft ob username und userid in der Session sind
+	 *
+	 * @return bool
+	 */
 	public function isLoggedIn()
 	{
 		return SessionH::existK('user','username') && SessionH::existK('user','userid');
 	}
 
+	/**
+	 * Setzt username und userid in die Session
+	 */
 	protected function setSessionValues()
 	{
 		SessionH::set('user',[

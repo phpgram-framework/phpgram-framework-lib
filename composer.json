@@ -16,7 +16,7 @@
 	],
 	"require": {
 		"php": "^7.1",
-		"phpgram/phpgram":"^1.2.7",
+		"phpgram/phpgram":"^1.2.8",
 		"phpgram/framework":"^1.0.7"
 	},
 	"autoload": {

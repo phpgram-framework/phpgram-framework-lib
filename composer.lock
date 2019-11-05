@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "808621bf5a63546c67f9ec521a8eaf7a",
+    "content-hash": "d9852bbece9f80cdd2909664beae7228",
     "packages": [
         {
             "name": "nyholm/psr7",
@@ -172,23 +172,23 @@
         },
         {
             "name": "phpgram/framework",
-            "version": "1.0.6",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/grammm/php-gram/phpgram-framework.git",
-                "reference": "fe8a3f240c0e05e2dcb7dbd736b2138ac6d5194e"
+                "reference": "4ec8e43664d9fca963bafe1e517f2644e899cad5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/grammm%2Fphp-gram%2Fphpgram-framework/repository/archive.zip?sha=fe8a3f240c0e05e2dcb7dbd736b2138ac6d5194e",
-                "reference": "fe8a3f240c0e05e2dcb7dbd736b2138ac6d5194e",
+                "url": "https://gitlab.com/api/v4/projects/grammm%2Fphp-gram%2Fphpgram-framework/repository/archive.zip?sha=4ec8e43664d9fca963bafe1e517f2644e899cad5",
+                "reference": "4ec8e43664d9fca963bafe1e517f2644e899cad5",
                 "shasum": ""
             },
             "require": {
                 "nyholm/psr7": "1.2.0",
                 "nyholm/psr7-server": "^0.3.0",
                 "php": "^7.1",
-                "phpgram/phpgram": "^1.2.4"
+                "phpgram/phpgram": "^1.3.0"
             },
             "type": "library",
             "autoload": {
@@ -216,20 +216,20 @@
                 "php",
                 "phpgram"
             ],
-            "time": "2019-10-05T15:15:06+00:00"
+            "time": "2019-11-01T17:09:38+00:00"
         },
         {
             "name": "phpgram/phpgram",
-            "version": "1.2.6",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/grammm/php-gram/phpgram.git",
-                "reference": "1395563414ab0de3f5a459228c2597477a1891c0"
+                "reference": "b6572909c3a229384fca8756d54f1b3121293b56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/grammm%2Fphp-gram%2Fphpgram/repository/archive.zip?sha=1395563414ab0de3f5a459228c2597477a1891c0",
-                "reference": "1395563414ab0de3f5a459228c2597477a1891c0",
+                "url": "https://gitlab.com/api/v4/projects/grammm%2Fphp-gram%2Fphpgram/repository/archive.zip?sha=b6572909c3a229384fca8756d54f1b3121293b56",
+                "reference": "b6572909c3a229384fca8756d54f1b3121293b56",
                 "shasum": ""
             },
             "require": {
@@ -249,7 +249,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2.x-dev"
+                    "dev-master": "1.3.x-dev"
                 }
             },
             "autoload": {
@@ -270,9 +270,11 @@
             "description": "A very fast and lightweight Php Framework for small to enterprise applications.",
             "keywords": [
                 "PSR 17",
+                "di container",
                 "framework",
                 "gram",
                 "micro framework",
+                "middleware",
                 "php",
                 "phpgram",
                 "psr 11",
@@ -281,57 +283,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2019-10-15T12:11:50+00:00"
-        },
-        {
-            "name": "pimple/pimple",
-            "version": "v3.2.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/silexphp/Pimple.git",
-                "reference": "9e403941ef9d65d20cba7d54e29fe906db42cf32"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/9e403941ef9d65d20cba7d54e29fe906db42cf32",
-                "reference": "9e403941ef9d65d20cba7d54e29fe906db42cf32",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "psr/container": "^1.0"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "^3.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.2.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Pimple": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "Pimple, a simple Dependency Injection Container",
-            "homepage": "http://pimple.sensiolabs.org",
-            "keywords": [
-                "container",
-                "dependency injection"
-            ],
-            "time": "2018-01-21T07:42:36+00:00"
+            "time": "2019-11-01T11:00:41+00:00"
         },
         {
             "name": "psr/container",

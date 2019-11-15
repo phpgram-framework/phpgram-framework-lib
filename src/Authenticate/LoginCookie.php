@@ -14,7 +14,7 @@
 namespace Gram\Project\Lib\Authenticate;
 
 use Gram\Project\Lib\Cookie\Psr7CookieInterface;
-use Gram\Project\Lib\SessionH;
+use Gram\Project\Lib\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -26,15 +26,16 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class LoginCookie extends Login
 {
-	protected $request, $response, $cookie, $session, $token;
+	protected $request, $response, $cookie, $sessionid, $token;
 
 	public function __construct(
+		SessionInterface $session,
 		UserInterface $user,
 		ServerRequestInterface $request,
 		ResponseInterface $response=null,
 		Psr7CookieInterface $cookie
 	){
-		parent::__construct($user);
+		parent::__construct($session,$user);
 
 		$this->request = $request;
 		$this->response = $response;
@@ -123,7 +124,7 @@ class LoginCookie extends Login
 	 */
 	public function logout()
 	{
-		$userid= SessionH::get('user','userid');
+		$userid = $this->session->get('user','userid');
 
 		//Werte aus DB löschen
 		$this->user->deleteSession($userid,$this->cookie->get($this->request,'sessionid'));
@@ -156,7 +157,7 @@ class LoginCookie extends Login
 
 		if($new){
 			//DB Eintrag
-			if(!$this->user->insertCookie($this->session,$this->token)){
+			if(!$this->user->insertCookie($this->sessionid,$this->token)){
 				return false;
 			}
 		}else{
@@ -164,7 +165,7 @@ class LoginCookie extends Login
 			$oldtoken = $this->cookie->get($this->request,'token');
 
 			//DB Eintrag
-			if(!$this->user->setSession($oldsid,$this->session) || !$this->user->setToken($oldtoken,$this->token)){
+			if(!$this->user->setSession($oldsid,$this->sessionid) || !$this->user->setToken($oldtoken,$this->token)){
 				return false;
 			}
 		}
@@ -174,11 +175,11 @@ class LoginCookie extends Login
 		if($this->response===null){
 			$this->response = [
 				$this->cookie->setRaw('token',$this->token),
-				$this->cookie->setRaw('sessionid',$this->session)
+				$this->cookie->setRaw('sessionid',$this->sessionid)
 			];
 		}else{
 			$this->response = $this->cookie->set($this->response,'token',$this->token);
-			$this->response = $this->cookie->set($this->response,'sessionid',$this->session);
+			$this->response = $this->cookie->set($this->response,'sessionid',$this->sessionid);
 		}
 
 		return true;
@@ -187,8 +188,8 @@ class LoginCookie extends Login
 	protected function userSessionId(){
 		//erstelle sessionid
 		do{
-			$this->session=AuthToken::generateToken(false);
-		}while($this->user->sessionIdExist($this->session));	//wiederhole solange bis ein neues Token gefunden wurde
+			$this->sessionid=$this->generateToken();
+		}while($this->user->sessionIdExist($this->sessionid));	//wiederhole solange bis ein neues Token gefunden wurde
 
 		return true;
 	}
@@ -196,9 +197,21 @@ class LoginCookie extends Login
 	protected function userToken(){
 		//erstelle token
 		do{
-			$this->token=AuthToken::generateToken(false);
+			$this->token=$this->generateToken();
 		}while($this->user->tokenExist($this->token));	//wiederhole solange bis ein neues Token gefunden wurde
 
 		return true;
+	}
+
+	protected function generateToken()
+	{
+		try {
+			$token = bin2hex(random_bytes(10));
+		} catch (\Exception $e) {
+			echo $e;
+			return false;
+		}
+
+		return $token;		//gebe Token zurück um es ins form ein zubinden
 	}
 }

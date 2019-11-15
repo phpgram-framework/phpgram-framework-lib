@@ -14,6 +14,8 @@
 namespace Gram\Project\Lib\Authenticate;
 
 
+use Gram\Project\Lib\Session\SessionInterface;
+
 abstract class AuthenticateAbstract
 {
 	const PW_ALOG=PASSWORD_DEFAULT;
@@ -22,9 +24,13 @@ abstract class AuthenticateAbstract
 	/** @var UserInterface */
 	protected $user;
 
-	public function __construct(UserInterface $user)
+	/** @var SessionInterface */
+	protected $session;
+
+	public function __construct(SessionInterface $session, UserInterface $user)
 	{
 		$this->user = $user;
+		$this->session = $session;
 	}
 
 	public function getUser()

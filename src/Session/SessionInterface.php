@@ -1,0 +1,27 @@
+<?php
+/**
+ * phpgram project
+ *
+ * This File is part of the phpgram Framework Lib
+ *
+ * Web: https://gitlab.com/grammm/php-gram/phpgram-framework-lib/tree/master
+ *
+ * @license https://gitlab.com/grammm/php-gram/phpgram-framework-lib/blob/master/LICENSE
+ *
+ * @author Jörn Heinemann <joernheinemann@gmx.de>
+ */
+
+namespace Gram\Project\Lib\Session;
+
+interface SessionInterface
+{
+	public function get($key,$key2 = false);
+
+	public function set($key,$value);
+
+	public function keyExist($key,$key2=false):bool;
+
+	public function start();
+
+	public function destroy();
+}

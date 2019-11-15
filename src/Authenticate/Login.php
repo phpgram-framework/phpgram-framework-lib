@@ -13,7 +13,6 @@
 
 namespace Gram\Project\Lib\Authenticate;
 
-use Gram\Project\Lib\SessionH;
 
 /**
  * Class Login
@@ -55,9 +54,9 @@ class Login extends AuthenticateAbstract
 	 */
 	public function logout()
 	{
-		SessionH::destroy();
+		$this->session->destroy();
 
-		return (!SessionH::existK('user','username'));
+		return (!$this->session->keyExist('user','username'));
 	}
 
 	/**
@@ -67,7 +66,7 @@ class Login extends AuthenticateAbstract
 	 */
 	public function isLoggedIn()
 	{
-		return SessionH::existK('user','username') && SessionH::existK('user','userid');
+		return $this->session->keyExist('user','username') && $this->session->keyExist('user','userid');
 	}
 
 	/**
@@ -75,7 +74,7 @@ class Login extends AuthenticateAbstract
 	 */
 	protected function setSessionValues()
 	{
-		SessionH::set('user',[
+		$this->session->set('user',[
 			'username'=>$this->user->getUserName(),
 			'userid'=>$this->user->getUserId()
 		]);

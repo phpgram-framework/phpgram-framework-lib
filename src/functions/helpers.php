@@ -35,8 +35,29 @@ if(!function_exists('url')){
 
 if(!function_exists('url_r')){
 
+	/**
+	 * Url Function die auf resources verweist
+	 *
+	 * @param string $path
+	 * @param bool $full
+	 * @return string
+	 */
 	function url_r(string $path,$full = true){
 		return url("resources/$path",$full);
+	}
+}
+
+if(!function_exists('url_s')){
+
+	/**
+	 * Url Function die auf storage verweist
+	 *
+	 * @param string $path
+	 * @param bool $full
+	 * @return string
+	 */
+	function url_s(string $path,$full = true){
+		return url("storage/$path",$full);
 	}
 }
 

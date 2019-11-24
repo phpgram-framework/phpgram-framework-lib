@@ -1,4 +1,4 @@
 # phpgram framework lib
 
-## Version 0.2.3
+## Version 0.2.4
 

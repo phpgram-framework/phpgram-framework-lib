@@ -19,10 +19,6 @@ class StdDB implements DBInterface
 {
 	/** @var PDO  */
 	private $pdo;
-	/** @var \PDOStatement */
-	private $stmt;
-
-	private $exe;
 
 	/**
 	 * StdDB constructor.
@@ -56,15 +52,7 @@ class StdDB implements DBInterface
 	 */
 	public function prepare($sql):\PDOStatement
 	{
-		return $this->stmt = $this->pdo->prepare($sql);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function execute(array $args=[])
-	{
-		return $this->exe = $this->stmt->execute($args);
+		return $this->pdo->prepare($sql);
 	}
 
 	/**
@@ -72,11 +60,9 @@ class StdDB implements DBInterface
 	 */
 	public function query($sql, array $args = [])
 	{
-		$this->stmt = $this->pdo->prepare($sql);
+		$stmt = $this->pdo->prepare($sql);
 
-		$this->exe = $this->stmt->execute($args);
-
-		return $this->exe;
+		return $stmt->execute($args);
 	}
 
 	/**
@@ -90,57 +76,25 @@ class StdDB implements DBInterface
 	/**
 	 * @inheritdoc
 	 */
-	public function fetch($fetchStyle=null)
-	{
-		if(!$this->checkStmt()){
-			return false;
-		}
-
-		return $this->stmt->fetch($fetchStyle);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function fetchAll($fetchStyle=null)
-	{
-		if(!$this->checkStmt()){
-			return false;
-		}
-
-		return $this->stmt->fetchAll($fetchStyle);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public function qNf($sql, array $args = [], $fetch = 0, $fetchStyle = null)
 	{
-		$query = $this->query($sql,$args);
+		$stmt = $this->pdo->prepare($sql);
+
+		$query = $stmt->execute($args);
 
 		if($query===false || $fetch===0){
 			return $query;
 		}
 
 		if($fetch===1){
-			return $this->fetch($fetchStyle);
+			return $stmt->fetch($fetchStyle);
 		}
 
 		if ($fetch===2){
-			return $this->fetchAll($fetchStyle);
+			return $stmt->fetchAll($fetchStyle);
 		}
 
 		return false;
-	}
-
-	/**
-	 * Prüft ob ein Stmt und ein execute erfolgreich waren
-	 *
-	 * @return bool
-	 */
-	private function checkStmt()
-	{
-		return isset($this->stmt) && isset($this->exe) && $this->stmt!==false && $this->exe!==false;
 	}
 
 	/**
@@ -150,11 +104,13 @@ class StdDB implements DBInterface
 	{
 		$sql="SELECT count($count) FROM $table WHERE $where";
 
-		if($this->query($sql,$args)===false){
+		$stmt = $this->pdo->prepare($sql);
+
+		if($stmt->execute($args)===false){
 			return false;
 		}
 
-		return $this->stmt->fetchColumn();
+		return $stmt->fetchColumn();
 	}
 
 	/**
@@ -164,22 +120,23 @@ class StdDB implements DBInterface
 	{
 		$sql="SELECT * FROM $table WHERE $where LIMIT 1";
 
-		if($this->query($sql,$args)===false){
+		$stmt = $this->pdo->prepare($sql);
+
+		if($stmt->execute($args)===false){
 			return false;
 		}
 
-		return ($this->stmt->rowCount()>0);
+		return ($stmt->rowCount()>0);
 	}
 
 	/**
 	 * @return PDO
 	 */
-	public function getDB()
+	public function getDB():\PDO
 	{
 		return $this->pdo;
 	}
 
 	//Diese Funktionen dürfen nicht aufgerufen werden von anderen Klassen
 	private function __clone(){}
-	private function __wakeup(){}
 }

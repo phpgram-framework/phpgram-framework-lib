@@ -33,14 +33,6 @@ interface DBInterface
 	public function prepare($sql):\PDOStatement;
 
 	/**
-	 * Führt ein prepare Statement aus
-	 *
-	 * @param array $args
-	 * @return mixed
-	 */
-	public function execute(array $args=[]);
-
-	/**
 	 * Führt ein Sql query aus
 	 *
 	 * Gibt true zurück wenn Query erfolgreich
@@ -58,29 +50,6 @@ interface DBInterface
 	 * @return mixed
 	 */
 	public function getLastId();
-
-	/**
-	 * Fetch den ersten Datensatz
-	 *
-	 * Setzt die Function @see query() voraus
-	 *
-	 * Es kann hier ein Fetchstyle angegeben werden
-	 * dieser ist Abhänig vom Db Provider
-	 *
-	 * @param null $fetchStyle
-	 * @return mixed
-	 */
-	public function fetch($fetchStyle=null);
-
-	/**
-	 * Fetch alle gefunden Datensätze
-	 *
-	 * Setzt die Function @see query() voraus
-	 *
-	 * @param null $fetchStyle
-	 * @return mixed
-	 */
-	public function fetchAll($fetchStyle=null);
 
 	/**
 	 * Query and fetch
@@ -119,4 +88,9 @@ interface DBInterface
 	 * @return mixed
 	 */
 	public function exist($table="",$where="",array $args=[]);
+
+	/**
+	 * @return \PDO
+	 */
+	public function getDB():\PDO;
 }

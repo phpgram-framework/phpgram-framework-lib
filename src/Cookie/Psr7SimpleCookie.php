@@ -37,26 +37,28 @@ class Psr7SimpleCookie implements Psr7CookieInterface
 	 * @inheritdoc
 	 * @throws \Exception
 	 */
-	public function set(ResponseInterface $response, $name, $value, $expire=false): ResponseInterface
+	public function set(ResponseInterface $response, $name, $value, $expiresAt = false, $expire=false): ResponseInterface
 	{
-		return $this->setRawCookie($response,$this->setRaw($name,$value,$expire));
+		return $this->setRawCookie($response,$this->setRaw($name,$value,$expiresAt,$expire));
 	}
 
 	/**
 	 * @inheritdoc
 	 * @throws \Exception
 	 */
-	public function setRaw($name, $value, $expire=false): array
+	public function setRaw($name, $value, $expiresAt = false, $expire=false): array
 	{
 		if($expire===false){
-			$expire='30';
+			if($expiresAt === false){
+				$expiresAt='30';
+			}
+
+			$date = new \DateTimeImmutable('now + '.$expiresAt.'days');
+			$expire = $date->format(\DateTime::COOKIE);
 		}
 
-		$expiry = new \DateTimeImmutable('now + '.$expire.'days');
-
 		$cookie = urlencode($name).'='.
-			urlencode($value).'; expires='.$expiry->format(\DateTime::COOKIE).'; Max-Age=' .
-			$expire * 60 * 60 * 24 . '; httponly';
+			urlencode($value).'; expires='.$expire.'; httponly';
 
 		return ['Set-Cookie',$cookie];
 	}

@@ -44,7 +44,7 @@ interface Psr7CookieInterface
 	 * @param bool $expire
 	 * @return ResponseInterface
 	 */
-	public function set(ResponseInterface $response, $name, $value, $expire=false):ResponseInterface;
+	public function set(ResponseInterface $response, $name, $value, $expiresAt = false,$expire=false):ResponseInterface;
 
 	/**
 	 * Erstellt nur den Header ohne diesen in einen Response ein zusetzen
@@ -58,7 +58,7 @@ interface Psr7CookieInterface
 	 * @param bool $expire
 	 * @return array
 	 */
-	public function setRaw($name, $value, $expire=false):array;
+	public function setRaw($name, $value, $expiresAt = false, $expire=false):array;
 
 	/**
 	 * Überschreibt einen Cookie, sodass seine Zeit abgelaufen ist

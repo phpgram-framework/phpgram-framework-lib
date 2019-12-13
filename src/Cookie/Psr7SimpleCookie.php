@@ -58,7 +58,7 @@ class Psr7SimpleCookie implements Psr7CookieInterface
 		}
 
 		$cookie = urlencode($name).'='.
-			urlencode($value).'; expires='.$expire.'; httponly';
+			urlencode($value).'; expires='.$expire.'; path=/; httponly';
 
 		return ['Set-Cookie',$cookie];
 	}

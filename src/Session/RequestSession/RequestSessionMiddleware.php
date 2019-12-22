@@ -102,18 +102,12 @@ class RequestSessionMiddleware implements MiddlewareInterface
 	 */
 	private function saveCache(RequestSession $session)
 	{
-		$id = $session->getId();
-
-		if($id === '') {
-			return false;
-		}
-
-		if ($session->isDeleted() === true) {
-			return $this->cache->delete($id);
+		foreach ($session->getOldIds() as $oldId) {
+			$this->cache->delete($oldId);
 		}
 
 		if($session->getStatus() === \PHP_SESSION_ACTIVE){
-			return $this->cache->set($id,$session->getContent());
+			return $this->cache->set($session->getId(),$session->getContent());
 		}
 
 		return true;

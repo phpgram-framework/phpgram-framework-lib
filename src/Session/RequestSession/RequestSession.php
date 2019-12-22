@@ -30,7 +30,7 @@ class RequestSession implements SessionInterface
 
 	protected $delete = false;
 
-	protected $session_id;
+	protected $session_id, $old_session_ids = [];
 
 	protected $content;
 
@@ -98,12 +98,13 @@ class RequestSession implements SessionInterface
 
 	public function destroy()
 	{
-		if ($this->active === \PHP_SESSION_NONE && $this->delete === false) {
+		if ($this->active === \PHP_SESSION_NONE) {
 			return;
 		}
 
+		$this->old_session_ids[] = $this->session_id;
+		$this->session_id = '';
 		$this->active = \PHP_SESSION_NONE;
-		$this->delete = true;
 		$this->content = [];
 	}
 
@@ -131,12 +132,9 @@ class RequestSession implements SessionInterface
 		return $this->active;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function isDeleted()
+	public function getOldIds()
 	{
-		return $this->delete;
+		return $this->old_session_ids;
 	}
 
 	protected function generate()

@@ -15,9 +15,11 @@ namespace Gram\Project\Lib\View\Strategy;
 
 use Gram\Project\Lib\View\ViewInterface;
 use Gram\Resolver\ResolverInterface;
-use Gram\Strategy\StrategyInterface;
+use Gram\Strategy\StdAppStrategy;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
-class GramViewStrategy implements StrategyInterface
+class GramViewStrategy extends StdAppStrategy
 {
 	/**
 	 * @inheritdoc
@@ -32,14 +34,21 @@ class GramViewStrategy implements StrategyInterface
 	 *
 	 * Führt die View Klasse aus und gibt das ausgefüllte Template zurück
 	 */
-	public function invoke(ResolverInterface $resolver, array $param)
+	public function invoke(
+		ResolverInterface $resolver,
+		array $param,
+		ServerRequestInterface $request,
+		ResponseInterface $response
+	):ResponseInterface
 	{
-		$result = $resolver->resolve($param);
+		$this->prepareResolver($request,$response,$resolver);
 
-		if(!$result instanceof ViewInterface){
-			return $result;
+		$content = $resolver->resolve($param);
+
+		if($content instanceof ViewInterface){
+			$content = $content->render();
 		}
 
-		return $result->render();
+		return $this->createBody($resolver,$content);
 	}
 }

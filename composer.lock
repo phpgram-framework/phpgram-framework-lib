@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38eb2cca937d42258e1bbc20bbfed7d3",
+    "content-hash": "5514f8f67cab7b72c256db2f060b657c",
     "packages": [
         {
             "name": "phpgram/phpgram",
-            "version": "1.4.2",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/grammm/php-gram/phpgram.git",
-                "reference": "740d8a3b19b50a81fb42c9ab1c26063aa39e26fd"
+                "reference": "9e548dfcab1e70ae9aa9f1af4e2c86463621cdec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/grammm%2Fphp-gram%2Fphpgram/repository/archive.zip?sha=740d8a3b19b50a81fb42c9ab1c26063aa39e26fd",
-                "reference": "740d8a3b19b50a81fb42c9ab1c26063aa39e26fd",
+                "url": "https://gitlab.com/api/v4/projects/grammm%2Fphp-gram%2Fphpgram/repository/archive.zip?sha=9e548dfcab1e70ae9aa9f1af4e2c86463621cdec",
+                "reference": "9e548dfcab1e70ae9aa9f1af4e2c86463621cdec",
                 "shasum": ""
             },
             "require": {
@@ -37,7 +37,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4.x-dev"
+                    "dev-master": "1.5.x-dev"
                 }
             },
             "autoload": {
@@ -55,9 +55,11 @@
                     "email": "joernheinemann@gmx.de"
                 }
             ],
-            "description": "A very fast and lightweight Php Framework for small to enterprise applications.",
+            "description": "A very fast and lightweight Php Framework for small to enterprise applications. Also supports Asynchronous Requests",
             "keywords": [
                 "PSR 17",
+                "async",
+                "asynchronous",
                 "di container",
                 "framework",
                 "gram",
@@ -71,7 +73,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2019-12-14T23:01:50+00:00"
+            "time": "2019-12-29T17:37:27+00:00"
         },
         {
             "name": "psr/container",

@@ -21,13 +21,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class GramViewStrategy extends StdAppStrategy
 {
-	/**
-	 * @inheritdoc
-	 */
-	public function getHeader():array
-	{
-		return ["name"=>'Content-Type',"value"=>'text/html'];
-	}
 
 	/**
 	 * @inheritdoc

@@ -63,6 +63,7 @@ class View implements StdViewInterface
 		require $file;
 
 		if($this->extendtpl!==null){
+			ob_end_clean();	//leere den Buffer
 			$this->template = $this->extendtpl;
 			$this->extendtpl = null;
 			return $this->render();

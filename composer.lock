@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5514f8f67cab7b72c256db2f060b657c",
+    "content-hash": "fca3317c6b3a74d3a72b4130d170f352",
     "packages": [
         {
             "name": "phpgram/phpgram",
-            "version": "1.5.0",
+            "version": "1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/grammm/php-gram/phpgram.git",
-                "reference": "9e548dfcab1e70ae9aa9f1af4e2c86463621cdec"
+                "reference": "f0407eea2842a7abc07ef3d98e85492053968df3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/grammm%2Fphp-gram%2Fphpgram/repository/archive.zip?sha=9e548dfcab1e70ae9aa9f1af4e2c86463621cdec",
-                "reference": "9e548dfcab1e70ae9aa9f1af4e2c86463621cdec",
+                "url": "https://gitlab.com/api/v4/projects/grammm%2Fphp-gram%2Fphpgram/repository/archive.zip?sha=f0407eea2842a7abc07ef3d98e85492053968df3",
+                "reference": "f0407eea2842a7abc07ef3d98e85492053968df3",
                 "shasum": ""
             },
             "require": {
@@ -37,7 +37,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.5.x-dev"
+                    "dev-master": "1.6.x-dev"
                 }
             },
             "autoload": {
@@ -58,14 +58,17 @@
             "description": "A very fast and lightweight Php Framework for small to enterprise applications. Also supports Asynchronous Requests",
             "keywords": [
                 "PSR 17",
+                "api",
                 "async",
                 "asynchronous",
                 "di container",
                 "framework",
+                "frameworks",
                 "gram",
+                "micro",
                 "micro framework",
+                "micro frameworks",
                 "middleware",
-                "php",
                 "phpgram",
                 "psr 11",
                 "psr 15",
@@ -73,7 +76,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2019-12-29T17:37:27+00:00"
+            "time": "2020-01-26T20:44:18+00:00"
         },
         {
             "name": "psr/container",

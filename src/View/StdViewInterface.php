@@ -86,4 +86,23 @@ interface StdViewInterface extends ViewInterface
 	 * @return void
 	 */
 	public function include_file($file);
+
+	/**
+	 * Gibt eine vorher definierte Variable aus oder einen leeren String
+	 * 
+	 * @param $var
+	 * @return mixed
+	 */
+	public function e($var);
+
+	/**
+	 * Kann einen String in verschiedenen Sprachen zurück geben
+	 *
+	 * Sollte Language gesetzt werden
+	 *
+	 * @param $side
+	 * @param $var
+	 * @return string
+	 */
+	public function lang($side,$var);
 }

@@ -25,9 +25,13 @@ class View implements StdViewInterface
 {
 	protected $template=null, $path, $args=[], $extendtpl=null;
 
-	public function __construct($tplPath)
+	/** @var LanguageInterface|null */
+	protected $language;
+
+	public function __construct($tplPath, ?LanguageInterface $language = null)
 	{
 		$this->path = $tplPath;
+		$this->language = $language;
 	}
 
 	/**
@@ -133,5 +137,25 @@ class View implements StdViewInterface
 		}
 
 		include $file;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function e($var)
+	{
+		return $this->args[$var] ?? '';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function lang($side,$var)
+	{
+		if(!isset($this->language)) {
+			return '';
+		}
+
+		return $this->language->get($side,$var);
 	}
 }

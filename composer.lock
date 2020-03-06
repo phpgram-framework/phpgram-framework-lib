@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fca3317c6b3a74d3a72b4130d170f352",
+    "content-hash": "dbcb0691a51e4881ca9179b4ecca27a7",
     "packages": [
         {
             "name": "phpgram/phpgram",
-            "version": "1.6.2",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/grammm/php-gram/phpgram.git",
-                "reference": "f0407eea2842a7abc07ef3d98e85492053968df3"
+                "reference": "08db87be0f6bd3ae5b7e77bdf0f147babb6c0581"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/grammm%2Fphp-gram%2Fphpgram/repository/archive.zip?sha=f0407eea2842a7abc07ef3d98e85492053968df3",
-                "reference": "f0407eea2842a7abc07ef3d98e85492053968df3",
+                "url": "https://gitlab.com/api/v4/projects/grammm%2Fphp-gram%2Fphpgram/repository/archive.zip?sha=08db87be0f6bd3ae5b7e77bdf0f147babb6c0581",
+                "reference": "08db87be0f6bd3ae5b7e77bdf0f147babb6c0581",
                 "shasum": ""
             },
             "require": {
@@ -37,7 +37,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6.x-dev"
+                    "dev-master": "1.7.x-dev"
                 }
             },
             "autoload": {
@@ -55,13 +55,13 @@
                     "email": "joernheinemann@gmx.de"
                 }
             ],
-            "description": "A very fast and lightweight Php Framework for small to enterprise applications. Also supports Asynchronous Requests",
+            "description": "A very fast and lightweight Php Framework for small to enterprise applications",
             "keywords": [
                 "PSR 17",
                 "api",
                 "async",
                 "asynchronous",
-                "di container",
+                "di",
                 "framework",
                 "frameworks",
                 "gram",
@@ -76,7 +76,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2020-01-26T20:44:18+00:00"
+            "time": "2020-02-19T11:13:44+00:00"
         },
         {
             "name": "psr/container",

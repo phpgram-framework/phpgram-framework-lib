@@ -12,6 +12,7 @@
  */
 
 namespace Gram\Project\Lib;
+
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -24,16 +25,58 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class Input
 {
-	private $json_input, $get, $post, $strict, $check;
+	/** @var array */
+	private $json_input;
 
-	public function __construct(ServerRequestInterface $request)
+	/** @var array */
+	private $get;
+
+	/** @var array */
+	private $post;
+
+	/** @var bool */
+	private $strict;
+
+	/** @var bool */
+	private $check;
+
+	/** @var ServerRequestInterface */
+	private $request;
+	
+	/**
+	 * Input constructor.
+	 *
+	 * @param ServerRequestInterface $request
+	 * Informationen über den Request
+	 *
+	 * @param callable|null $bodyInput
+	 * Wenn der body des Requests anders behandelt werden soll
+	 * Standard: json_decode
+	 */
+	public function __construct(ServerRequestInterface $request, callable $bodyInput = null)
 	{
 		$this->get = $request->getQueryParams();
 		$this->post = $request->getParsedBody();
 
 		$stream = $request->getBody()->__toString();
 
-		$this->json_input = ($stream==='')?[]:json_decode($stream,true);
+		if(!isset($bodyInput)) {
+			$this->json_input = ($stream==='')?[]:json_decode($stream,true);
+		} else {
+			$this->json_input = $bodyInput($stream);
+		}
+		
+		$this->request = $request;
+	}
+
+	/**
+	 * Gibt den Request wieder zurück
+	 * 
+	 * @return ServerRequestInterface
+	 */
+	public function getRequest():ServerRequestInterface
+	{
+		return $this->request;
 	}
 
 	/**

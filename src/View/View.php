@@ -130,7 +130,7 @@ class View implements StdViewInterface
 	 */
 	public function include_file($file)
 	{
-		$file = $this->path.strtolower($file) . '.php';
+		$file = $this->path . $this->template . '.php';
 
 		if (!file_exists($file)) {
 			throw new TemplateNotFoundException('Template ' . $file . ' not found!');

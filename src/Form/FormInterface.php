@@ -50,5 +50,4 @@ interface FormInterface
 	 * und die die falsch eingegeben wurden zurück
 	 */
 	public function evaluateForm(Input $input):array;
-
 }

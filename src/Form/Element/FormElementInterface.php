@@ -39,4 +39,11 @@ interface FormElementInterface
 	 * @return mixed
 	 */
 	public function evaluateElement(Input $input);
+
+	/**
+	 * Gibt an ob die Evaluation erfolgreich war
+	 *
+	 * @return bool
+	 */
+	public function getStatus():bool;
 }

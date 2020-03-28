@@ -38,6 +38,9 @@ class Element implements FormElementInterface
 	/** @var callable|null */
 	private $conditions;
 
+	/** @var bool */
+	private $status = true;
+
 	/**
 	 * Element constructor.
 	 *
@@ -74,11 +77,15 @@ class Element implements FormElementInterface
 			$input = $input->gNc($this->name,$this->strict,$this->clean);
 		}
 
+		if($input === false) {
+			$this->status = false;
+		}
+
 		if(isset($this->conditions)) {
 			$conditions = $this->conditions;
 
 			if($conditions($input) === false) {
-				return false;
+				$this->status = false;
 			}
 		}
 
@@ -91,5 +98,15 @@ class Element implements FormElementInterface
 	public function getName(): string
 	{
 		return $this->name;
+	}
+
+	/**
+	 * Gibt an ob die Evaluation erfolgreich war
+	 *
+	 * @return bool
+	 */
+	public function getStatus(): bool
+	{
+		return $this->status;
 	}
 }

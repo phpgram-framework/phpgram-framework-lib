@@ -25,7 +25,6 @@ use Psr\Http\Message\UploadedFileInterface;
  */
 class File implements FormElementInterface
 {
-
 	/** @var string */
 	private $name;
 
@@ -38,24 +37,58 @@ class File implements FormElementInterface
 	/** @var callable|null */
 	private $checkFile;
 
+	/** @var callable|null */
+	private $returnHandling;
+
 	/** @var int */
 	private $errorHandling;
 
 	/** @var bool */
-	private $error = false;
+	private $status = true;
 
+	/**
+	 * File constructor.
+	 *
+	 * @param string $name
+	 * Den File Inout Namen
+	 *
+	 * @param string $targetPath
+	 * Wo die File gespeichert werden soll
+	 *
+	 * @param callable|null $targetName
+	 * Die Möglichkeit einen eigenen Filename zu wählen
+	 * Bekommt UploadedFileInterface übergeben
+	 *
+	 * @param int $errorHandling
+	 * Was soll gemacht werden wenn ein Error auftritt
+	 * = 0 -> gebe false zurück
+	 * = 1 -> gebe ein Array mit einer Meldung und dem Error Code zurück
+	 * = 2 -> wie bei 1 nur als Exception
+	 *
+	 * @param callable|null $checkFile
+	 * Die Möglichkeit die File zu prüfen
+	 * Bekommt UploadedFileInterface übergeben
+	 *
+	 * @param callable|null $return
+	 * Die Möglichkeit eigene Informationen über die File zurück
+	 * zugeben
+	 * Bekommt UploadedFileInterface und den Filename übergeben
+	 * bei null: gebe den Filename zurück
+	 */
 	public function __construct(
 		string $name,
 		string $targetPath,
 		callable $targetName = null,
 		int $errorHandling = 0,
-		callable $checkFile = null
+		callable $checkFile = null,
+		callable $return = null
 	) {
 		$this->name = $name;
 		$this->targetPath = $targetPath;
 		$this->targetName = $targetName;
 		$this->errorHandling = $errorHandling;
 		$this->checkFile = $checkFile;
+		$this->returnHandling = $return;
 	}
 
 	/**
@@ -64,6 +97,14 @@ class File implements FormElementInterface
 	public function getName(): string
 	{
 		return $this->name;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getStatus(): bool
+	{
+		return $this->status;
 	}
 
 	/**
@@ -97,14 +138,14 @@ class File implements FormElementInterface
 
 		/** @var UploadedFileInterface $item */
 		foreach ($file as $item) {
-			$status = $this->handleFile($item);
+			$fileStatus = $this->handleFile($item);
 
 			//Wenn ein Fehler aufgetreten ist
-			if($this->error) {
-				return $status;
+			if(!$this->status) {
+				return $fileStatus;
 			}
 
-			$fileNames[] = $status;
+			$fileNames[] = $fileStatus;
 		}
 
 		return $fileNames;
@@ -117,7 +158,7 @@ class File implements FormElementInterface
 	 * Gibt dann den Filename zurück
 	 *
 	 * @param UploadedFileInterface $file
-	 * @return array|bool|string
+	 * @return array|bool|string|mixed
 	 * @throws FileUploadException
 	 */
 	private function handleFile(UploadedFileInterface $file)
@@ -134,15 +175,25 @@ class File implements FormElementInterface
 			}
 		}
 
+		//gebe den Filename an
 		if(!isset($this->targetName)) {
+			//wenn nichts vom user angegeben -> den client filename
 			$filename = $file->getClientFilename();
 		} else {
+			//sonst lasse den user entscheiden
 			$targetName = $this->targetName;
 
 			$filename = $targetName($file);
 		}
 
 		$file->moveTo($this->targetPath.$filename);
+
+		//wenn der User eigene Infos über die Files zurück haben möchte
+		if(isset($this->returnHandling)) {
+			$return = $this->returnHandling;
+
+			return $return($file,$filename);
+		}
 
 		return $filename;
 	}
@@ -175,7 +226,7 @@ class File implements FormElementInterface
 			}
 		}
 
-		$this->error = true;
+		$this->status = false;
 
 		switch ($this->errorHandling) {
 			case 1:

@@ -63,10 +63,10 @@ class Form implements FormInterface
 		foreach ($this->formElements as $formElement) {
 			$result = $formElement->evaluateElement($input);
 
-			if($result === false) {
+			if($formElement->getStatus() === false) {
 				//wenn Input nicht gesetzt wurde
 				$status = false;
-				$falseInput[] = $formElement->getName();
+				$falseInput[$formElement->getName()] = $result;
 			} else {
 				//Wenn es den Input gibt
 				$rightInput[$formElement->getName()] = $result;

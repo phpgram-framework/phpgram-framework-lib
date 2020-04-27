@@ -37,8 +37,15 @@ class StdDB implements DBInterface
 	 */
 	public function __construct($driver, $host, $post, $dbName, $dbUser, $dbPw, bool $error=true)
 	{
+		if($driver == "mysql") {
+			//Bei Mysql ein Charset angeben
+			$charset = "charset=utf8;";
+		} else {
+			$charset = "";
+		}
+
 		$this->pdo = new PDO("$driver:" . sprintf(
-				"host=%s;port=%s;dbname=%s",
+				"host=%s;port=%s;dbname=%s;$charset",
 				$host,
 				$post,
 				$dbName

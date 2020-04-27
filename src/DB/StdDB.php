@@ -18,7 +18,7 @@ use PDO;
 class StdDB implements DBInterface
 {
 	/** @var PDO  */
-	private $pdo;
+	protected $pdo;
 
 	/**
 	 * StdDB constructor.
@@ -27,20 +27,22 @@ class StdDB implements DBInterface
 	 *
 	 * Es kann angegeben werden ob Errors gezeigt werden sollen
 	 *
+	 * @param $driver
 	 * @param $host
+	 * @param $post
 	 * @param $dbName
-	 * @param $charSet
 	 * @param $dbUser
 	 * @param $dbPw
 	 * @param bool $error
 	 */
-	public function __construct($host,$dbName,$charSet,$dbUser,$dbPw,bool $error=true)
+	public function __construct($driver, $host, $post, $dbName, $dbUser, $dbPw, bool $error=true)
 	{
-		$this->pdo = new PDO(
-			'mysql:host='.$host.';dbname='.$dbName.';charset='.$charSet.'',
-			''.$dbUser.'',
-			''.$dbPw.''
-		);
+		$this->pdo = new PDO("$driver:" . sprintf(
+				"host=%s;port=%s;dbname=%s",
+				$host,
+				$post,
+				$dbName
+			),$dbUser,$dbPw);
 
 		if($error){
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

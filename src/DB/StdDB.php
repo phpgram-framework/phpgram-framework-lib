@@ -20,6 +20,30 @@ class StdDB implements DBInterface
 	/** @var PDO  */
 	protected $pdo;
 
+	/** @var string Driver der DB z. B. mysql */
+	private $driver;
+
+	/** @var string Host der DB */
+	private $host;
+
+	/** @var string|int Port der DB*/
+	private $port;
+
+	/** @var string Welche DB */
+	private $dbName;
+
+	/** @var string User */
+	private $dbUser;
+
+	/** @var string Password des Users */
+	private $dbPw;
+
+	/** @var bool */
+	private $error;
+
+	/** @var bool */
+	private $reconnect;
+
 	/**
 	 * StdDB constructor.
 	 *
@@ -29,31 +53,25 @@ class StdDB implements DBInterface
 	 *
 	 * @param $driver
 	 * @param $host
-	 * @param $post
+	 * @param $port
 	 * @param $dbName
 	 * @param $dbUser
 	 * @param $dbPw
 	 * @param bool $error
+	 * @param bool $reconnect
 	 */
-	public function __construct($driver, $host, $post, $dbName, $dbUser, $dbPw, bool $error=true)
+	public function __construct($driver, $host, $port, $dbName, $dbUser, $dbPw, bool $error=true, bool $reconnect= false)
 	{
-		if($driver == "mysql") {
-			//Bei Mysql ein Charset angeben
-			$charset = "charset=utf8;";
-		} else {
-			$charset = "";
-		}
+		$this->driver = $driver;
+		$this->host = $host;
+		$this->port = $port;
+		$this->dbName = $dbName;
+		$this->dbUser = $dbUser;
+		$this->dbPw = $dbPw;
+		$this->error = $error;
+		$this->reconnect = $reconnect;
 
-		$this->pdo = new PDO("$driver:" . sprintf(
-				"host=%s;port=%s;dbname=%s;$charset",
-				$host,
-				$post,
-				$dbName
-			),$dbUser,$dbPw);
-
-		if($error){
-			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		}
+		$this->init();
 	}
 
 	/**
@@ -61,7 +79,7 @@ class StdDB implements DBInterface
 	 */
 	public function prepare($sql):\PDOStatement
 	{
-		return $this->pdo->prepare($sql);
+		return $this->pdo()->prepare($sql);
 	}
 
 	/**
@@ -69,7 +87,7 @@ class StdDB implements DBInterface
 	 */
 	public function query($sql, array $args = [])
 	{
-		$stmt = $this->pdo->prepare($sql);
+		$stmt = $this->pdo()->prepare($sql);
 
 		return $stmt->execute($args);
 	}
@@ -79,7 +97,7 @@ class StdDB implements DBInterface
 	 */
 	public function getLastId()
 	{
-		return $this->pdo->lastInsertId();
+		return $this->pdo()->lastInsertId();
 	}
 
 	/**
@@ -87,7 +105,7 @@ class StdDB implements DBInterface
 	 */
 	public function qNf($sql, array $args = [], $fetch = 0, $fetchStyle = null)
 	{
-		$stmt = $this->pdo->prepare($sql);
+		$stmt = $this->pdo()->prepare($sql);
 
 		$query = $stmt->execute($args);
 
@@ -113,7 +131,7 @@ class StdDB implements DBInterface
 	{
 		$sql="SELECT count($count) FROM $table WHERE $where";
 
-		$stmt = $this->pdo->prepare($sql);
+		$stmt = $this->pdo()->prepare($sql);
 
 		if($stmt->execute($args)===false){
 			return false;
@@ -129,7 +147,7 @@ class StdDB implements DBInterface
 	{
 		$sql="SELECT * FROM $table WHERE $where LIMIT 1";
 
-		$stmt = $this->pdo->prepare($sql);
+		$stmt = $this->pdo()->prepare($sql);
 
 		if($stmt->execute($args)===false){
 			return false;
@@ -138,12 +156,47 @@ class StdDB implements DBInterface
 		return ($stmt->rowCount()>0);
 	}
 
+	private function pdo(): PDO
+	{
+		if($this->reconnect) {
+			//Prüfe die Verbindung, wenn nicht mehr verfügbar -> erstelle neue
+			try{
+				$this->pdo->query("SELECT 1");
+			} catch (\PDOException $e) {
+				$this->init();
+			}
+		}
+
+		return $this->pdo;
+	}
+
+	private function init()
+	{
+		if($this->driver == "mysql") {
+			//Bei Mysql ein Charset angeben
+			$charset = "charset=utf8;";
+		} else {
+			$charset = "";
+		}
+
+		$this->pdo = new PDO("{$this->driver}:" . sprintf(
+				"host=%s;port=%s;dbname=%s;$charset",
+				$this->host,
+				$this->port,
+				$this->dbName
+			),$this->dbUser,$this->dbPw);
+
+		if($this->error){
+			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		}
+	}
+
 	/**
 	 * @return PDO
 	 */
 	public function getDB():\PDO
 	{
-		return $this->pdo;
+		return $this->pdo();
 	}
 
 	//Diese Funktionen dürfen nicht aufgerufen werden von anderen Klassen

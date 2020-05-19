@@ -60,7 +60,7 @@ class StdDB implements DBInterface
 	 * @param bool $error
 	 * @param bool $reconnect
 	 */
-	public function __construct($driver, $host, $port, $dbName, $dbUser, $dbPw, bool $error=true, bool $reconnect= false)
+	public function __construct($driver, $host, $port, $dbName, $dbUser, $dbPw, bool $error=true, bool $reconnect = true)
 	{
 		$this->driver = $driver;
 		$this->host = $host;

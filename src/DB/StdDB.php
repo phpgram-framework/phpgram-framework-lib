@@ -97,7 +97,7 @@ class StdDB implements DBInterface
 	 */
 	public function getLastId()
 	{
-		return $this->pdo()->lastInsertId();
+		return $this->pdo->lastInsertId();
 	}
 
 	/**
